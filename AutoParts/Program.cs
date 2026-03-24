@@ -1,23 +1,34 @@
+using AutoParts.Data;
+using AutoParts.Services;
+using Microsoft.EntityFrameworkCore;
+using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddSingleton(serviceProvider =>
+{
+    var apiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY");
+    var googleAI = new GoogleAI(apiKey: apiKey);
+    return googleAI.GenerativeModel(model: Model.Gemini20Flash);
+});
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<ChatbotService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

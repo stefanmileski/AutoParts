@@ -1,9 +1,11 @@
 ﻿namespace AutoParts.Models
 {
-    public class Manufacturer
+    public class Manufacturer : BaseEntity
     {
-        public required int Name { get; set; }
+        public required string Name { get; set; }
 
-        public string? Country { get; set; }
+        public ICollection<CarModel> CarModels { get; set; } = [];
+
+        public ICollection<Part> Parts { get; set; } = [];
     }
 }

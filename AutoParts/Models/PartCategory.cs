@@ -1,9 +1,11 @@
 ﻿namespace AutoParts.Models
 {
-    public class PartCategory
+    public class PartCategory : BaseEntity
     {
-        public int Id { get; set; }
-        
         public required string Name { get; set; }
+
+        public ICollection<Part> Parts { get; set; } = [];
+
+        public ICollection<PartCompatibility> PartCompatibilities { get; set; } = [];
     }
 }
