@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -38,7 +38,7 @@ export class App implements OnInit {
   messages: Message[] = [];
   loading: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.http.get<Manufacturer[]>('http://localhost:5156/api/manufacturers')
@@ -70,10 +70,12 @@ export class App implements OnInit {
       next: (res) => {
         this.messages.push({ role: 'bot', text: res.response });
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.messages.push({ role: 'bot', text: 'Something went wrong. Please try again.' });
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }

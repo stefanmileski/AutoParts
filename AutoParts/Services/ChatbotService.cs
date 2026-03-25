@@ -1,17 +1,12 @@
 ﻿namespace AutoParts.Services
 {
-    using Mscc.GenerativeAI;
-    using Mscc.GenerativeAI.Types;
-
-    public class ChatbotService(GenerativeModel model)
+    public class ChatbotService
     {
-        private readonly GenerativeModel _model = model;
-
         public async Task<string> GenerateResponseAsync(string userQuery, string carModelName, List<Models.Part> parts)
         {
-            string prompt = $"""
+            string systemPrompt = $"""
                 You are an assistant for an auto parts shop.
-                The customer drives a {carModelName} and reports: "{userQuery}"
+                The customer drives a {carModelName}.
 
                 Available compatible parts from inventory:
                 {string.Join("\n", parts.Select(p =>
@@ -21,37 +16,37 @@
                 Only use the parts listed above — do not suggest anything outside this list.
                 """;
 
-            var apiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY");
+            var apiKey = Environment.GetEnvironmentVariable("GROQ_API_KEY");
 
             using var http = new HttpClient();
-            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}";
+            http.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
 
             var body = new
             {
-                contents = new[]
+                model = "llama-3.3-70b-versatile",
+                messages = new[]
                 {
-            new { parts = new[] { new { text = prompt } } }
-        }
+                    new { role = "system", content = systemPrompt },
+                    new { role = "user", content = userQuery }
+                }
             };
 
             var json = System.Text.Json.JsonSerializer.Serialize(body);
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-            var response = await http.PostAsync(url, content);
+            var response = await http.PostAsync("https://api.groq.com/openai/v1/chat/completions", content);
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine($"Gemini status: {response.StatusCode}");
-            Console.WriteLine($"Gemini response: {responseBody}");
+            Console.WriteLine($"Groq status: {response.StatusCode}");
 
             if (!response.IsSuccessStatusCode)
-                return $"Gemini error: {response.StatusCode}";
+                return $"Error: {response.StatusCode}";
 
             using var doc = System.Text.Json.JsonDocument.Parse(responseBody);
             return doc.RootElement
-                .GetProperty("candidates")[0]
+                .GetProperty("choices")[0]
+                .GetProperty("message")
                 .GetProperty("content")
-                .GetProperty("parts")[0]
-                .GetProperty("text")
                 .GetString() ?? string.Empty;
         }
     }
