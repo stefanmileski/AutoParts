@@ -2,7 +2,7 @@
 {
     public class Manufacturer : BaseEntity
     {
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public ICollection<CarModel> CarModels { get; set; } = [];
 

@@ -1,0 +1,41 @@
+<div class="container">
+  <h1>Auto Parts Assistant</h1>
+
+  <div class="car-select">
+    <label for="manufacturer">Brand:</label>
+    <select id="manufacturer" [(ngModel)]="selectedManufacturerId" (ngModelChange)="onManufacturerChange()">
+      <option [ngValue]="null" disabled>-- Select a brand --</option>
+      <option *ngFor="let m of manufacturers" [ngValue]="m.id">{{ m.name }}</option>
+    </select>
+
+    <label for="carModel">Model:</label>
+    <select id="carModel" [(ngModel)]="selectedCarModelId" [disabled]="carModels.length === 0">
+      <option [ngValue]="null" disabled>-- Select a model --</option>
+      <option *ngFor="let car of carModels" [ngValue]="car.id">
+        {{ car.name }} ({{ car.yearInProductionSince }}–{{ car.yearInProductionTill ?? 'present' }})
+      </option>
+    </select>
+  </div>
+
+  <div class="chat-box">
+    <div class="messages">
+      <div *ngFor="let msg of messages" [class]="'message ' + msg.role">
+        <span>{{ msg.text }}</span>
+      </div>
+      <div *ngIf="loading" class="message bot">
+        <span>Thinking...</span>
+      </div>
+    </div>
+
+    <div class="input-row">
+      <input
+        type="text"
+        [(ngModel)]="query"
+        placeholder="Describe your problem..."
+        (keyup.enter)="send()"
+        [disabled]="!selectedCarModelId || loading"
+      />
+      <button (click)="send()" [disabled]="!selectedCarModelId || loading">Send</button>
+    </div>
+  </div>
+</div>

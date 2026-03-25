@@ -2,7 +2,7 @@
 {
     public class PartCategory : BaseEntity
     {
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public ICollection<Part> Parts { get; set; } = [];
 

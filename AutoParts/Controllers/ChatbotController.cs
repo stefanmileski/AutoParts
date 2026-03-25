@@ -16,6 +16,7 @@
         public async Task<IActionResult> Query([FromBody] ChatQueryRequest request)
         {
             var carModel = await _context.CarModels
+                .Include(c => c.Manufacturer)
                 .FirstOrDefaultAsync(c => c.Id == request.CarModelId);
 
             if (carModel == null)
@@ -31,9 +32,11 @@
             if (!parts.Any())
                 return NotFound("No compatible parts found for this car model.");
 
+            string fullName = $"{carModel.Manufacturer.Name} {carModel.Name}";
+
             var response = await _chatbotService.GenerateResponseAsync(
                 request.Query,
-                carModel.Name,
+                fullName,
                 parts
             );
 

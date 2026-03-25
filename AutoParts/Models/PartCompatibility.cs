@@ -4,14 +4,14 @@
     {
         public int PartId { get; set; }
 
-        public required Part Part { get; set; }
+        public Part Part { get; set; } = null!;
 
         public int CarModelId { get; set; }
 
-        public required CarModel CarModel { get; set; }
+        public CarModel CarModel { get; set; } = null!;
 
         public int PartCategoryId { get; set; }
 
-        public required PartCategory PartCategory { get; set; }
+        public PartCategory PartCategory { get; set; } = null!;
     }
 }

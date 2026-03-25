@@ -2,11 +2,11 @@
 {
     public class CarModel : BaseEntity
     {
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public int ManufacturerId { get; set; }
 
-        public required Manufacturer Manufacturer { get; set; }
+        public Manufacturer Manufacturer { get; set; } = null!;
 
         public int YearInProductionSince { get; set; }
 

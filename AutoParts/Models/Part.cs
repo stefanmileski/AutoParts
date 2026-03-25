@@ -4,20 +4,20 @@
     {
         public int PartCategoryId { get; set; }
 
-        public required PartCategory PartCategory { get; set; }
+        public PartCategory PartCategory { get; set; } = null!;
 
         public int ManufacturerId { get; set; }
 
-        public required Manufacturer Manufacturer { get; set; }
+        public Manufacturer Manufacturer { get; set; } = null!;
 
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         
         public string? Description { get; set; }
 
-        public required string OemNumber { get; set; }
+        public string OemNumber { get; set; } = string.Empty;
 
-        public required decimal Price { get; set; }
+        public decimal Price { get; set; }
 
-        public required int StockQuantity { get; set; }
+        public int StockQuantity { get; set; }
     }
 }
