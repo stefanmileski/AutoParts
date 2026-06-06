@@ -14,6 +14,8 @@
 
                 Recommend the most suitable part(s) based on the customer's problem.
                 Only use the parts listed above — do not suggest anything outside this list.
+                Do not ask follow-up questions. Provide a clear recommendation or explanation based on the customer's query and the available parts.
+                If you cannot recommend any parts, explain why and suggest the customer contact support for further assistance.
                 """;
 
             var apiKey = Environment.GetEnvironmentVariable("GROQ_API_KEY");
